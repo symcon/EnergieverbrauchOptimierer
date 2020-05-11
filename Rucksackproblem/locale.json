@@ -1,0 +1,19 @@
+{
+    "translations": {
+        "de": {
+            "Source": "Quelle",
+            "Size of Backpack": "Größe des Rucksacks",
+            "Consumers": "Verbraucher",
+            "Device": "Gerät",
+            "Usage": "Verbrauch",
+            "Priority": "Priorität",
+            "Tolerance": "Toleranz",
+            "Strategy": "Strategie",
+            "Strategy1": "Strategie1",
+            "Strategy2": "Strategie2",
+            "Action": "Aktion",
+            "Enable": "Einschalten",
+            "Disable": "Ausschalten"
+        }
+    }
+}

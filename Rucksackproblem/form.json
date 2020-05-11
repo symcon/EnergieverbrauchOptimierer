@@ -1,0 +1,92 @@
+{
+    "elements": [
+        {
+            "type": "SelectVariable",
+            "name": "Source",
+            "caption": "Source (W)"
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "BackpackSize",
+            "caption": "Size of Backpack",
+            "suffix": "W"
+        },
+        {
+            "type": "List",
+            "name": "Consumers",
+            "caption": "Consumers",
+            "add": true,
+            "delete": true,
+            "sort": {
+                "column": "Priority",
+                "direction": "ascending"
+            },
+            "columns": [
+                {
+                    "name": "Device",
+                    "caption": "Device",
+                    "width": "100px",
+                    "edit": {
+                        "type": "SelectVariable"
+                    },
+                    "add": 0
+                },
+                {
+                    "name": "Usage",
+                    "caption": "Usage",
+                    "width": "200px",
+                    "edit": {
+                        "type": "NumberSpinner",
+                        "suffix": "W"
+                    },
+                    "add": 0
+                },
+                {
+                    "name": "Priority",
+                    "caption": "Priority",
+                    "width": "auto",
+                    "edit": {
+                        "type": "NumberSpinner"
+                    },
+                    "add": 0
+                }
+            ]
+        },
+        {
+            "type": "NumberSpinner",
+            "name": "Tolerance",
+            "caption": "Tolerance",
+            "suffix": "W"
+        },
+        {
+            "type": "Select",
+            "name": "Strategy",
+            "caption": "Strategy",
+            "options": [
+                {
+                    "caption": "Strategy1",
+                    "value": "0"
+                },
+                {
+                    "caption": "Strategy2",
+                    "value": "1"
+                }
+            ]
+        },
+        {
+            "type": "Select",
+            "name": "Action",
+            "caption": "Action",
+            "options": [
+                {
+                    "caption": "Enable",
+                    "value": "0"
+                },
+                {
+                    "caption": "Disable",
+                    "value": "1"
+                }
+            ]
+        }
+    ]
+}

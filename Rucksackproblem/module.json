@@ -1,0 +1,12 @@
+{
+    "id": "{2E863560-5434-7166-C3F6-111D5D471A43}",
+    "name": "Rucksackproblem",
+    "type": 3,
+    "vendor": "",
+    "aliases": [],
+    "parentRequirements": [],
+    "childRequirements": [],
+    "implemented": [],
+    "prefix": "RP",
+    "url": "https://github.com/symcon"
+}
