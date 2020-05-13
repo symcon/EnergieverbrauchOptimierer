@@ -1,19 +1,20 @@
 {
     "translations": {
         "de": {
-            "Source": "Quelle",
-            "Size of Backpack": "Größe des Rucksacks",
+            "Source (W)": "Quelle (W)",
             "Consumers": "Verbraucher",
+            "Tolerance": "Toleranz",
             "Device": "Gerät",
             "Usage": "Verbrauch",
-            "Priority": "Priorität",
-            "Tolerance": "Toleranz",
             "Strategy": "Strategie",
             "Strategy1": "Strategie1",
             "Strategy2": "Strategie2",
-            "Action": "Aktion",
-            "Enable": "Einschalten",
-            "Disable": "Ausschalten"
+            "No valid source selected.": "Keine gültige Quellvariable ausgewählt.",
+            "Source variable must be of type integer or float.": "Quellevariable muss vom Typ Integer oder Float sein.",
+            "All device variables must be of type boolean.": "Alle Geräte-Variablen müssen vom Typ Boolean sein.",
+            "All device variables must have actions.": "Alle Geräte-Variablen müssen eine Aktion haben.",
+            "Ok": "Ok",
+            "Error": "Fehler"
         }
     }
 }

@@ -45,11 +45,11 @@
             "caption": "Strategy",
             "options": [
                 {
-                    "caption": "+ Tolerance",
+                    "caption": "Strategy1",
                     "value": "1"
                 },
                 {
-                    "caption": "- Tolerance",
+                    "caption": "Strategy2",
                     "value": "2"
                 }
             ]
@@ -63,17 +63,17 @@
         },
         {
             "code": 200,
-            "caption": "Source is not of type integer or float.",
+            "caption": "Source variable must be of type integer or float.",
             "icon": "error"
         },
         {
             "code": 201,
-            "caption": "Not all device variables are of type boolean.",
+            "caption": "All device variables must be of type boolean.",
             "icon": "error"
         },
         {
             "code": 202,
-            "caption": "Not all device variables have actions.",
+            "caption": "All device variables must have actions.",
             "icon": "error"
         }
     ]
