@@ -13,6 +13,17 @@ class EnergieverbrauchOptimierer extends IPSModule
         $this->RegisterPropertyInteger('Tolerance', 0);
         $this->RegisterPropertyString('Consumers', '');
         $this->RegisterPropertyString('Strategy', '1');
+
+        //Profiles
+        if (!IPS_VariableProfileExists('EO.Error')) {
+            IPS_CreateVariableProfile('EO.Error', 0);
+            IPS_SetVariableProfileIcon('EO.Error', 'Information');
+            IPS_SetVariableProfileAssociation('EO.Error', 1, $this->Translate('Error'), '', 0xFF0000);
+            IPS_SetVariableProfileAssociation('EO.Error', 0, $this->Translate('Ok'), '', 0x00FF00);
+        }
+
+        //Variables
+        $this->RegisterVariableBoolean('Error', $this->Translate('Error'), 'EO.Error', 0);
     }
 
     public function Destroy()
@@ -76,6 +87,12 @@ class EnergieverbrauchOptimierer extends IPSModule
             }
         }
 
+        if ($this->ReadPropertyString('Strategy') == '1') {
+            IPS_SetHidden($this->GetIDForIdent('Error'), true);
+        } else {
+            IPS_SetHidden($this->GetIDForIdent('Error'), false);
+        }
+
         $this->SetStatus(102);
     }
 
@@ -118,6 +135,26 @@ class EnergieverbrauchOptimierer extends IPSModule
 
                 break;
             case '2': //-Tolerance
+
+                $values = [];
+                $capacity = $availablePower - $tolerance;
+                foreach ($consumers as $consumer) {
+                    $devices[] = $consumer['Device'];
+                    $values[] = $consumer['Usage'];
+                }
+
+                //Initialize
+                $numcalls = 0;
+                $m = [];
+                $pickedIndex = [];
+
+                list($resultUsage, $pickedIndex) = $this->knapSolveFast($values, $values, count($values) - 1, $capacity, $m);
+                if ($resultUsage != $capacity) {
+                    $this->SetValue('Error', true);
+                    return [];
+                } else {
+                    $this->SetValue('Error', false);
+                }
                 break;
         }
 
@@ -126,7 +163,6 @@ class EnergieverbrauchOptimierer extends IPSModule
         foreach ($pickedIndex as $index) {
             $activeDevices[] = $devices[$index];
         }
-        var_dump($devices);
 
         return $activeDevices;
     }
