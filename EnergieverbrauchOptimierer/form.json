@@ -1,56 +1,13 @@
 {
     "elements": [
         {
+            "type": "Button",
+            "onClick": "EO_calculateActiveDevices($id);"
+        },
+        {
             "type": "SelectVariable",
             "name": "Source",
             "caption": "Source (W)"
-        },
-        {
-            "type": "NumberSpinner",
-            "name": "BackpackSize",
-            "caption": "Size of Backpack",
-            "suffix": "W"
-        },
-        {
-            "type": "List",
-            "name": "Consumers",
-            "caption": "Consumers",
-            "add": true,
-            "delete": true,
-            "sort": {
-                "column": "Priority",
-                "direction": "ascending"
-            },
-            "columns": [
-                {
-                    "name": "Device",
-                    "caption": "Device",
-                    "width": "100px",
-                    "edit": {
-                        "type": "SelectVariable"
-                    },
-                    "add": 0
-                },
-                {
-                    "name": "Usage",
-                    "caption": "Usage",
-                    "width": "200px",
-                    "edit": {
-                        "type": "NumberSpinner",
-                        "suffix": "W"
-                    },
-                    "add": 0
-                },
-                {
-                    "name": "Priority",
-                    "caption": "Priority",
-                    "width": "auto",
-                    "edit": {
-                        "type": "NumberSpinner"
-                    },
-                    "add": 0
-                }
-            ]
         },
         {
             "type": "NumberSpinner",
@@ -59,34 +16,69 @@
             "suffix": "W"
         },
         {
-            "type": "Select",
-            "name": "Strategy",
-            "caption": "Strategy",
-            "options": [
+            "type": "List",
+            "name": "Consumers",
+            "caption": "Consumers",
+            "add": true,
+            "delete": true,
+            "columns": [
                 {
-                    "caption": "Strategy1",
-                    "value": "0"
+                    "name": "Device",
+                    "caption": "Device",
+                    "width": "250px",
+                    "edit": {
+                        "type": "SelectVariable"
+                    },
+                    "add": 0
                 },
                 {
-                    "caption": "Strategy2",
-                    "value": "1"
+                    "name": "Usage",
+                    "caption": "Usage",
+                    "width": "auto",
+                    "edit": {
+                        "type": "NumberSpinner",
+                        "suffix": "W"
+                    },
+                    "add": 0
                 }
             ]
         },
         {
             "type": "Select",
-            "name": "Action",
-            "caption": "Action",
+            "name": "Strategy",
+            "caption": "Strategy",
             "options": [
                 {
-                    "caption": "Enable",
-                    "value": "0"
+                    "caption": "+ Tolerance",
+                    "value": "1"
                 },
                 {
-                    "caption": "Disable",
-                    "value": "1"
+                    "caption": "- Tolerance",
+                    "value": "2"
                 }
             ]
+        }
+    ],
+    "status": [
+        {
+            "code": 104,
+            "caption": "No valid source selected.",
+            "icon": "inactive"
+        },
+        {
+            "code": 200,
+            "caption": "Source is not of type integer or float.",
+            "icon": "error"
+        },
+        {
+            "code": 201,
+            "caption": "Not all device variables are of type boolean.",
+            "icon": "error"
+        },
+        {
+            "code": 202,
+            "caption": "Not all device variables have actions.",
+            "icon": "error"
         }
     ]
 }

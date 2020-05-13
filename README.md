@@ -1,6 +1,6 @@
-# Rucksackproblem
+# EnergieverbrauchOptimierer
 
-Folgende Module beinhaltet das Rucksackproblem Repository:
+Folgende Module beinhaltet das EnergieverbrauchOptimierer Repository:
 
-- __Rucksackproblem__ ([Dokumentation](Rucksackproblem))  
+- __EnergieverbrauchOptimierer__ ([Dokumentation](EnergieverbrauchOptimierer))  
 	Kurze Beschreibung des Moduls.

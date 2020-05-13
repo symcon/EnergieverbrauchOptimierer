@@ -5,7 +5,7 @@
     </php>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">../Rucksackproblem</directory>
+            <directory suffix=".php">../EnergieverbrauchOptimierer</directory>
         </whitelist>
     </filter>
 </phpunit>
