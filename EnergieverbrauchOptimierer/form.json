@@ -1,10 +1,6 @@
 {
     "elements": [
         {
-            "type": "Button",
-            "onClick": "EO_calculateActiveDevices($id);"
-        },
-        {
             "type": "SelectVariable",
             "name": "Source",
             "caption": "Source (W)"
