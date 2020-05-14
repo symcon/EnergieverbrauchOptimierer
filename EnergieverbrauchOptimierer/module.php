@@ -127,34 +127,11 @@ class EnergieverbrauchOptimierer extends IPSModule
                 }
 
                 //Initialize
-                $numcalls = 0;
-                $m = [];
-                $pickedIndex = [];
-
-                list($resultUsage, $pickedIndex) = $this->knapSolveFast($values, $values, count($values) - 1, $capacity, $m);
+               $pickedIndex = $this->KnapSack($availablePower, $values);
 
                 break;
             case '2': //-Tolerance
 
-                $values = [];
-                $capacity = $availablePower - $tolerance;
-                foreach ($consumers as $consumer) {
-                    $devices[] = $consumer['Device'];
-                    $values[] = $consumer['Usage'];
-                }
-
-                //Initialize
-                $numcalls = 0;
-                $m = [];
-                $pickedIndex = [];
-
-                list($resultUsage, $pickedIndex) = $this->knapSolveFast($values, $values, count($values) - 1, $capacity, $m);
-                if ($resultUsage != $capacity) {
-                    $this->SetValue('Error', true);
-                    return [];
-                } else {
-                    $this->SetValue('Error', false);
-                }
                 break;
         }
 
@@ -181,60 +158,32 @@ class EnergieverbrauchOptimierer extends IPSModule
         }
     }
 
-    public function knapSolveFast($w, $v, $i, $aW, &$m) //https://rosettacode.org/wiki/Knapsack_problem/0-1#PHP
+    public function KnapSack($capacity, $weight)
     {
-        global $numcalls;
-        $numcalls++;
-        // echo "Called with i=$i, aW=$aW<br>";
+        $K = [];
 
-        // Return memo if we have one
-        if (isset($m[$i][$aW])) {
-            return [$m[$i][$aW], $m['picked'][$i][$aW]];
-        } else {
-
-            // At end of decision branch
-            if ($i == 0) {
-                if ($w[$i] <= $aW) { // Will this item fit?
-                    $m[$i][$aW] = $v[$i]; // Memo this item
-                    $m['picked'][$i][$aW] = [$i]; // and the picked item
-                    return [$v[$i], [$i]]; // Return the value of this item and add it to the picked list
+        for ($i = 0; $i <= count($weight); ++$i) {
+            for ($w = 0; $w <= $capacity; ++$w) {
+                if ($i == 0 || $w == 0) {
+                    $K[$i][$w] = 0;
+                    $K['picked'][$i][$w] = [];
+                } elseif ($weight[$i - 1] <= $w) {
+                    $withMe = $weight[$i - 1] + $K[$i - 1][$w - $weight[$i - 1]];
+                    $withoutMe = $K[$i - 1][$w];
+                    if ($withMe > $withoutMe) {
+                        $K[$i][$w] = $withMe;
+                        $K['picked'][$i][$w] = $K['picked'][$i - 1][$w - $weight[$i - 1]];
+                        $K['picked'][$i][$w][] = $i - 1;
+                    } else {
+                        $K[$i][$w] = $withoutMe;
+                        $K['picked'][$i][$w] = $K['picked'][$i - 1][$w];
+                    }
                 } else {
-                    // Won't fit
-                    $m[$i][$aW] = 0; // Memo zero
-                    $m['picked'][$i][$aW] = []; // and a blank array entry...
-                    return [0, []]; // Return nothing
+                    $K[$i][$w] = $K[$i - 1][$w];
+                    $K['picked'][$i][$w][] = $K['picked'][$i - 1][$w];
                 }
-            }
-
-            // Not at end of decision branch..
-            // Get the result of the next branch (without this one)
-            list($without_i, $without_PI) = $this->knapSolveFast($w, $v, $i - 1, $aW, $m);
-
-            if ($w[$i] > $aW) { // Does it return too many?
-
-                $m[$i][$aW] = $without_i; // Memo without including this one
-                $m['picked'][$i][$aW] = $without_PI; // and a blank array entry...
-                return [$without_i, $without_PI]; // and return it
-            } else {
-
-                // Get the result of the next branch (WITH this one picked, so available weight is reduced)
-                list($with_i, $with_PI) = $this->knapSolveFast($w, $v, ($i - 1), ($aW - $w[$i]), $m);
-                $with_i += $v[$i];  // ..and add the value of this one..
-
-                // Get the greater of WITH or WITHOUT
-                if ($with_i > $without_i) {
-                    $res = $with_i;
-                    $picked = $with_PI;
-                    array_push($picked, $i);
-                } else {
-                    $res = $without_i;
-                    $picked = $without_PI;
-                }
-
-                $m[$i][$aW] = $res; // Store it in the memo
-                $m['picked'][$i][$aW] = $picked; // and store the picked item
-                return [$res, $picked]; // and then return it
             }
         }
+        return $K['picked'][count($weight)][$capacity];
     }
 }
