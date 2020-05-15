@@ -37,6 +37,10 @@ class EnergieverbrauchOptimierer extends IPSModule
         //Never delete this line!
         parent::ApplyChanges();
 
+        $this->setInstanceStatus();
+        if ($this->GetStatus() != 102) {
+            return;
+        }
         //Unregister messages
         $messageList = array_keys($this->GetMessageList());
         foreach ($messageList as $message) {
@@ -44,56 +48,13 @@ class EnergieverbrauchOptimierer extends IPSModule
         }
 
         $sourceID = $this->ReadPropertyInteger('Source');
-
-        //Register message if source is valid
-        if ($sourceID != 0 && IPS_VariableExists($sourceID)) {
-            switch (IPS_GetVariable($sourceID)['VariableType']) {
-                case VARIABLETYPE_INTEGER:
-                case VARIABLETYPE_FLOAT:
-                    $this->RegisterMessage($sourceID, VM_UPDATE);
-                    break;
-                default:
-                    $this->SetStatus(200);
-                    return;
-                    break;
-
-            }
-        } else {
-            //Status inactive
-            $this->SetStatus(104);
-            return;
-        }
-
-        $consumers = json_decode($this->ReadPropertyString('Consumers'), true);
-
-        foreach ($consumers as $consumer) {
-            $deviceID = $consumer['Device'];
-            //Checking weather variable exists and is boolean and set status accordingly
-            if (IPS_VariableExists($deviceID)) {
-                switch (IPS_GetVariable($deviceID)['VariableType']) {
-                    case VARIABLETYPE_BOOLEAN:
-                        break;
-                    default:
-                        $this->SetStatus(201);
-                        return;
-                        break;
-
-                }
-            }
-
-            if (!HasAction($deviceID)) {
-                $this->SetStatus(202);
-                return;
-            }
-        }
+        $this->RegisterMessage($sourceID, VM_UPDATE);
 
         if ($this->ReadPropertyString('Strategy') == '1') {
             IPS_SetHidden($this->GetIDForIdent('Error'), true);
         } else {
             IPS_SetHidden($this->GetIDForIdent('Error'), false);
         }
-
-        $this->SetStatus(102);
     }
 
     public function MessageSink($TimeStamp, $SenderID, $MessageID, $Data)
@@ -107,8 +68,8 @@ class EnergieverbrauchOptimierer extends IPSModule
 
     public function calculateActiveDevices()
     {
+        $this->setInstanceStatus();
         if ($this->GetStatus() != 102) {
-            $this->SendDebug('calculateActiveDevices', 'status not ok', 0);
             return [];
         }
 
@@ -185,5 +146,57 @@ class EnergieverbrauchOptimierer extends IPSModule
             }
         }
         return $K['picked'][count($weight)][$capacity];
+    }
+
+    private function setInstanceStatus()
+    {
+        $sourceID = $this->ReadPropertyInteger('Source');
+
+        //Check source variable
+        if ($sourceID == 0) {
+            $this->SetStatus(104);
+            return;
+        }
+        if (IPS_VariableExists($sourceID)) {
+            switch (IPS_GetVariable($sourceID)['VariableType']) {
+                case VARIABLETYPE_INTEGER:
+                case VARIABLETYPE_FLOAT:
+                    break;
+                default:
+                    $this->SetStatus(201);
+                    return;
+                    break;
+
+            }
+        } else {
+            $this->SetStatus(200);
+            return;
+        }
+
+        $consumers = json_decode($this->ReadPropertyString('Consumers'), true);
+
+        foreach ($consumers as $consumer) {
+            $deviceID = $consumer['Device'];
+            //Checking weather variable exists and is boolean and set status accordingly
+            if (IPS_VariableExists($deviceID)) {
+                switch (IPS_GetVariable($deviceID)['VariableType']) {
+                    case VARIABLETYPE_BOOLEAN:
+                        break;
+                    default:
+                        $this->SetStatus(202);
+                        return;
+                        break;
+
+                }
+            }
+
+            if (!HasAction($deviceID)) {
+                $this->SetStatus(203);
+                return;
+            }
+        }
+
+        $this->SetStatus(102);
+        return;
     }
 }

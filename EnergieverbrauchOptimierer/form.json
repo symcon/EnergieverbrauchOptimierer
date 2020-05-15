@@ -58,21 +58,26 @@
     "status": [
         {
             "code": 104,
-            "caption": "No valid source selected.",
+            "caption": "No source selected.",
             "icon": "inactive"
         },
         {
             "code": 200,
-            "caption": "Source variable must be of type integer or float.",
+            "caption": "Selected source variable does not exist.",
             "icon": "error"
         },
         {
             "code": 201,
-            "caption": "All device variables must be of type boolean.",
+            "caption": "Selected source variable must be of type integer or float.",
             "icon": "error"
         },
         {
             "code": 202,
+            "caption": "All device variables must be of type boolean.",
+            "icon": "error"
+        },
+        {
+            "code": 203,
             "caption": "All device variables must have actions.",
             "icon": "error"
         }
