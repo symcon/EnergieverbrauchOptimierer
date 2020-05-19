@@ -53,6 +53,9 @@
                     "value": "2"
                 }
             ]
+        },
+        {
+            "type": "TestCenter"
         }
     ],
     "status": [

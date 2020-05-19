@@ -23,7 +23,10 @@ class EnergieverbrauchOptimierer extends IPSModule
         }
 
         //Variables
-        $this->RegisterVariableBoolean('Error', $this->Translate('Error'), 'EO.Error', 0);
+        $this->RegisterVariableBoolean('Active', $this->Translate('Active'), '~Switch', 0);
+        $this->EnableAction('Active');
+        $this->RegisterVariableBoolean('Error', $this->Translate('Error'), 'EO.Error', 10);
+        $this->RegisterVariableFloat('UsedPower', $this->Translate('Usage'));
     }
 
     public function Destroy()
@@ -59,10 +62,29 @@ class EnergieverbrauchOptimierer extends IPSModule
 
     public function MessageSink($TimeStamp, $SenderID, $MessageID, $Data)
     {
-        $this->SendDebug('MessageSink', json_encode($Data), 0);
-        if ($Data[0] != $Data[2]) {
-            $this->SendDebug('MessageSink', 'not equal', 0);
-            $this->switchDevices($this->calculateActiveDevices());
+        if ($this->GetValue('Active')) {
+            if ($Data[0] != $Data[2]) {
+                $this->switchDevices($this->calculateActiveDevices());
+            }
+        }
+    }
+
+    public function RequestAction($Ident, $Value)
+    {
+        switch ($Ident) {
+            case 'Active':
+                $this->SetValue($Ident, $Value);
+                if (!$Value) {
+                    $consumers = json_decode($this->ReadPropertyString('Consumers'), true);
+                    foreach ($consumers as $consumer) {
+                        RequestAction($consumer['Device'], false);
+                    }
+                } else {
+                    $this->switchDevices($this->calculateActiveDevices());
+                }
+                break;
+            default:
+                throw new Exception('Invalid ident');
         }
     }
 
@@ -87,29 +109,28 @@ class EnergieverbrauchOptimierer extends IPSModule
                     $values[] = $consumer['Usage'];
                 }
 
-                //Initialize
-               $pickedIndex = $this->KnapSack($availablePower, $values);
+                $pickedIndex = $this->KnapSack($capacity, $values);
 
-                break;
+            break;
             case '2': //-Tolerance
-
-                break;
+                echo 'Not implemented yet';
+            break;
         }
 
         //Create return array containing devices which should be switched
         $activeDevices = [];
+        $consumedValue = 0;
         foreach ($pickedIndex as $index) {
             $activeDevices[] = $devices[$index];
+            $consumedValue += $values[$index];
         }
-
+        $this->SetValue('UsedPower', $consumedValue);
         return $activeDevices;
     }
 
     public function switchDevices($devices)
     {
-        $this->SendDebug('switchDevices', 'triggered', 0);
         $consumers = json_decode($this->ReadPropertyString('Consumers'), true);
-
         foreach ($consumers as $consumer) {
             if (in_array($consumer['Device'], $devices)) {
                 RequestAction($consumer['Device'], true);

@@ -15,7 +15,8 @@
             "All device variables must be of type boolean.": "Alle Geräte-Variablen müssen vom Typ Boolean sein.",
             "All device variables must have actions.": "Alle Geräte-Variablen müssen eine Aktion haben.",
             "Ok": "Ok",
-            "Error": "Fehler"
+            "Error": "Fehler",
+            "Active": "Aktiv"
         }
     }
 }

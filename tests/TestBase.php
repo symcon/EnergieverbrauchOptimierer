@@ -15,6 +15,10 @@ include_once __DIR__ . '/stubs/ModuleStubs.php';
 
 function setUpTest($values, $availableValue, $tolerance, $strategy)
 {
+    if (!IPS\ProfileManager::variableProfileExists('~Switch')) {
+        IPS\ProfileManager::createVariableProfile('~Switch', 3);
+        IPS\ProfileManager::createVariableProfile('~Switch', 0);
+    }
     $instanceID = IPS_CreateInstance('{2E863560-5434-7166-C3F6-111D5D471A43}');
 
     $availableID = CreateVariable(VARIABLETYPE_INTEGER, false);
