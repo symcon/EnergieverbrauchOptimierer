@@ -141,7 +141,7 @@ class EnergieverbrauchOptimierer extends IPSModule
                     }
                 } else {
                     $K[$i][$w] = $K[$i - 1][$w];
-                    $K['picked'][$i][$w][] = $K['picked'][$i - 1][$w];
+                    $K['picked'][$i][$w] = $K['picked'][$i - 1][$w];
                 }
             }
         }
