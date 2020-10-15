@@ -16,7 +16,11 @@
             "All device variables must have actions.": "Alle Geräte-Variablen müssen eine Aktion haben.",
             "Ok": "Ok",
             "Error": "Fehler",
-            "Active": "Aktiv"
+            "Active": "Aktiv",
+            "Status": "Status",
+            "Use as much as possible (Never use too much)": "So viel wie möglich verbrauchen (Niemals zu viel verbrauchen)",
+            "Always consume everything (Never use too little)": "Immer alles verbrauchen (Niemals zu wenig verbrauchen)",
+            "The consumer list is empty.": "Die Verbraucherliste ist leer."
         }
     }
 }

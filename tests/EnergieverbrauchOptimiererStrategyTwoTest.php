@@ -6,7 +6,7 @@ use PHPUnit\Framework\TestCase;
 
 include_once __DIR__ . '/TestBase.php';
 
-class EnergieverbrauchOptimiererStrategyOneTest extends TestCase
+class EnergieverbrauchOptimiererStrategyTwoTest extends TestCase
 {
     protected function setUp(): void
     {
@@ -21,69 +21,96 @@ class EnergieverbrauchOptimiererStrategyOneTest extends TestCase
 
         parent::setUp();
     }
-    public function testStrategyOneA(): void
+    public function testStrategyTwoA(): void
     {
-        $test = setUpTest([2000, 750, 500, 200, 100], 1000, 0, 1);
+        $test = setUpTest([2000, 750, 500, 200, 100], 1000, 100, 2);
         $instanceID = $test['InstanceID'];
         $instanceStatus = IPS_GetInstance($instanceID)['InstanceStatus'];
         $deviceIDs = $test['DeviceIDs'];
         $this->assertEquals(102, $instanceStatus);
         EO_updateDevices($instanceID);
-
+        //Status variable set properly
+        $this->assertFalse(GetValue(IPS_GetObjectIDByIdent('Status', $instanceID)));
         //Check enabled devices
         $this->assertTrue(GetValue($deviceIDs['Device2']));
         $this->assertTrue(GetValue($deviceIDs['Device4']));
+        $this->assertTrue(GetValue($deviceIDs['Device5']));
 
         //Check disabled devices
         $this->assertFalse(GetValue($deviceIDs['Device1']));
         $this->assertFalse(GetValue($deviceIDs['Device3']));
-        $this->assertFalse(GetValue($deviceIDs['Device5']));
     }
 
-    public function testStrategyOneB(): void
+    public function testStrategyTwoB(): void
     {
-        $test = setUpTest([2000, 750, 500, 200, 100], 3000, 0, 1);
+        $test = setUpTest([2000, 750, 500, 200, 100], 3000, 100, 2);
         $instanceID = $test['InstanceID'];
         $instanceStatus = IPS_GetInstance($instanceID)['InstanceStatus'];
         $deviceIDs = $test['DeviceIDs'];
         $this->assertEquals(102, $instanceStatus);
         EO_updateDevices($instanceID);
 
+        //Status variable set properly
+        $this->assertFalse(GetValue(IPS_GetObjectIDByIdent('Status', $instanceID)));
         //Check enabled devices
         $this->assertTrue(GetValue($deviceIDs['Device1']));
         $this->assertTrue(GetValue($deviceIDs['Device2']));
         $this->assertTrue(GetValue($deviceIDs['Device4']));
+        $this->assertTrue(GetValue($deviceIDs['Device5']));
 
         //Check disabled devices
         $this->assertFalse(GetValue($deviceIDs['Device3']));
+    }
+
+    public function testStrategyTwoAError(): void
+    {
+        $test = setUpTest([2000, 750, 500, 200, 100], 1000, 0, 2);
+        $instanceID = $test['InstanceID'];
+        $instanceStatus = IPS_GetInstance($instanceID)['InstanceStatus'];
+        $deviceIDs = $test['DeviceIDs'];
+        $this->assertEquals(102, $instanceStatus);
+        EO_updateDevices($instanceID);
+
+        //Status variable set properly
+        $this->assertTrue(GetValue(IPS_GetObjectIDByIdent('Status', $instanceID)));
+        //Check disabled devices
+        $this->assertFalse(GetValue($deviceIDs['Device1']));
+        $this->assertFalse(GetValue($deviceIDs['Device2']));
+        $this->assertFalse(GetValue($deviceIDs['Device3']));
+        $this->assertFalse(GetValue($deviceIDs['Device4']));
         $this->assertFalse(GetValue($deviceIDs['Device5']));
     }
 
-    public function testStrategyOneExact(): void
+    public function testStrategyTwoBError(): void
     {
-        $test = setUpTest([1000, 1000, 1000, 1000, 1000], 50000, 0, 1);
+        $test = setUpTest([2000, 750, 500, 200, 100], 3000, 0, 2);
         $instanceID = $test['InstanceID'];
         $instanceStatus = IPS_GetInstance($instanceID)['InstanceStatus'];
         $deviceIDs = $test['DeviceIDs'];
         $this->assertEquals(102, $instanceStatus);
         EO_updateDevices($instanceID);
 
-        //Check enabled devices
-        $this->assertTrue(GetValue($deviceIDs['Device1']));
-        $this->assertTrue(GetValue($deviceIDs['Device2']));
-        $this->assertTrue(GetValue($deviceIDs['Device3']));
-        $this->assertTrue(GetValue($deviceIDs['Device4']));
-        $this->assertTrue(GetValue($deviceIDs['Device5']));
+        //Status variable set properly
+        $this->assertTrue(GetValue(IPS_GetObjectIDByIdent('Status', $instanceID)));
+        //Check disabled devices
+        $this->assertFalse(GetValue($deviceIDs['Device1']));
+        $this->assertFalse(GetValue($deviceIDs['Device2']));
+        $this->assertFalse(GetValue($deviceIDs['Device3']));
+        $this->assertFalse(GetValue($deviceIDs['Device4']));
+        $this->assertFalse(GetValue($deviceIDs['Device5']));
     }
 
-    public function testStrategyOneNegativeAvailable(): void
+    //Not enough consumers to reach available power
+    public function testStrategyTwoNotEnough(): void
     {
-        $test = setUpTest([1000, 1000, 1000, 1000, 1000], -100, 0, 1);
+        $test = setUpTest([2000, 750, 500, 200, 100], 10000, 100, 2);
         $instanceID = $test['InstanceID'];
         $instanceStatus = IPS_GetInstance($instanceID)['InstanceStatus'];
         $deviceIDs = $test['DeviceIDs'];
         $this->assertEquals(102, $instanceStatus);
         EO_updateDevices($instanceID);
+        //Status variable set properly
+        $this->assertTrue(GetValue(IPS_GetObjectIDByIdent('Status', $instanceID)));
 
         //Check disabled devices
         $this->assertFalse(GetValue($deviceIDs['Device1']));
