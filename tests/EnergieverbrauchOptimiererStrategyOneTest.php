@@ -61,7 +61,7 @@ class EnergieverbrauchOptimiererStrategyOneTest extends TestCase
 
     public function testStrategyOneExact(): void
     {
-        $test = setUpTest([1000, 1000, 1000, 1000, 1000], 50000, 0, 1);
+        $test = setUpTest([1000, 1000, 1000, 1000, 1000], 5000, 0, 1);
         $instanceID = $test['InstanceID'];
         $instanceStatus = IPS_GetInstance($instanceID)['InstanceStatus'];
         $deviceIDs = $test['DeviceIDs'];
